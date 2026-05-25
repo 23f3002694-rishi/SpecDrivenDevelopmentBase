@@ -39,3 +39,14 @@ def query(
         rows = (r for r in rows if r.created_at <= date_to)
 
     return sorted(rows, key=lambda r: getattr(r, sort), reverse=descending)
+    
+def get_report_by_id(report_id: int) -> Report | None:
+    """Return one report by ID or None if missing."""
+
+    rows = all_reports()
+
+    for report in rows:
+        if report.id == report_id:
+            return report
+
+    return None

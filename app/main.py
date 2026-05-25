@@ -7,7 +7,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, Query
 
 from app.models import ReportListResponse, ReportPublic, ReportStatus
-from app.reports import query
+from app.reports import query, get_report_by_id
 
 app = FastAPI(title="SDD Workshop — Reports API", version="0.1.0")
 
@@ -51,3 +51,17 @@ def list_reports(
         offset=offset,
         limit=limit,
     )
+    
+@app.get("/reports/{report_id}", response_model=ReportPublic)
+def get_report(report_id: int) -> ReportPublic:
+    """Return one report by ID."""
+
+    report = get_report_by_id(report_id)
+
+    if report is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Report not found",
+        )
+
+    return ReportPublic.from_internal(report)
