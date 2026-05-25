@@ -8,13 +8,17 @@ client = TestClient(app)
 
 def test_get_report_found():
 
-    response = client.get("/reports/1")
+    reports = client.get("/reports").json()["items"]
+
+    existing_id = reports[0]["id"]
+
+    response = client.get(f"/reports/{existing_id}")
 
     assert response.status_code == 200
 
     data = response.json()
 
-    assert data["id"] == 1
+    assert data["id"] == existing_id
 
     assert "internal_id" not in data
 
@@ -23,7 +27,11 @@ def test_get_report_found():
 
 def test_get_report_missing():
 
-    response = client.get("/reports/99999")
+    reports = client.get("/reports").json()["items"]
+
+    missing_id = max(r["id"] for r in reports) + 1
+
+    response = client.get(f"/reports/{missing_id}")
 
     assert response.status_code == 404
 

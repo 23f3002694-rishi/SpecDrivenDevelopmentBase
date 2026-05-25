@@ -52,11 +52,11 @@ def list_reports(
         limit=limit,
     )
     
-@app.get("/reports/{report_id}", response_model=ReportPublic)
-def get_report(report_id: int) -> ReportPublic:
+@app.get("/reports/{id}", response_model=ReportPublic)
+def get_report(id: int) -> ReportPublic:
     """Return one report by ID."""
 
-    report = get_report_by_id(report_id)
+    report = get_report_by_id(id)
 
     if report is None:
         raise HTTPException(
